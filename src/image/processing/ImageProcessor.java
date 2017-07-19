@@ -560,9 +560,8 @@ public class ImageProcessor {
         }
         return nImage;
     }
-    
-    
-public BufferedImage bilinearInterpolation(int newWidth, int newHeight, BufferedImage image) {
+
+    public BufferedImage bilinearInterpolation(int newWidth, int newHeight, BufferedImage image) {
 
         BufferedImage nImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB); // creating the output_image
         int A, B, C, D, x, y, blue, green, red, p;
@@ -587,18 +586,40 @@ public BufferedImage bilinearInterpolation(int newWidth, int newHeight, Buffered
                         + (C & 0xff) * (y_diff) * (1 - x_diff) + (D & 0xff) * (x_diff * y_diff));
 
                 green = (int) (((A >> 8) & 0xff) * (1 - x_diff) * (1 - y_diff) + ((B >> 8) & 0xff) * (x_diff) * (1 - y_diff)
-                        + ((C >> 8)& 0xff) * (y_diff) * (1 - x_diff) + ((D >> 8)& 0xff) * (x_diff * y_diff));
+                        + ((C >> 8) & 0xff) * (y_diff) * (1 - x_diff) + ((D >> 8) & 0xff) * (x_diff * y_diff));
 
                 red = (int) (((A >> 16) & 0xff) * (1 - x_diff) * (1 - y_diff) + ((B >> 16) & 0xff) * (x_diff) * (1 - y_diff)
                         + ((C >> 16) & 0xff) * (y_diff) * (1 - x_diff) + ((D >> 16) & 0xff) * (x_diff * y_diff));
 
                 int a = (A >> 24) & 0xff;
-                p = (a << 24) | (red << 16) | (green << 8)| blue;
+                p = (a << 24) | (red << 16) | (green << 8) | blue;
 
                 nImage.setRGB(j, i, p);
             }
         }
         return nImage;
-}
+    }
+
+    public BufferedImage zoomBiLinear(int value, BufferedImage image) {
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
+        newWidth += newWidth * value / 100;
+        newHeight += newHeight * value / 100;
+        image = bilinearInterpolation(newWidth, newHeight, image);
+
+        return image;
+
+    }
+
+    public BufferedImage zoomOutBiLinear(int value, BufferedImage image) {
+
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
+        newWidth += newWidth * value / 100;
+        newHeight += newHeight * value / 100;
+        image = bilinearInterpolation(newWidth, newHeight, image);
+
+        return image;
+    }
 
 }

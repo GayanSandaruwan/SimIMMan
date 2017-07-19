@@ -148,7 +148,7 @@ public class ControlFrame extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(zoomSize);
 
-        ZoomAlgoDrop.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NN", "LI", "Bi LI" }));
+        ZoomAlgoDrop.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NN", "Bi LI" }));
         ZoomAlgoDrop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ZoomAlgoDropActionPerformed(evt);
@@ -210,8 +210,8 @@ public class ControlFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrientationTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(InfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         OrientationTabLayout.setVerticalGroup(
@@ -339,7 +339,7 @@ public class ControlFrame extends javax.swing.JFrame {
 
         NegotiveButn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         NegotiveButn.setForeground(new java.awt.Color(51, 51, 51));
-        NegotiveButn.setText("Negotive");
+        NegotiveButn.setText("Negative");
         NegotiveButn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 NegotiveButnActionPerformed(evt);
@@ -368,7 +368,7 @@ public class ControlFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(ColorControlTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ColorControlTabLayout.createSequentialGroup()
-                        .addGap(0, 4, Short.MAX_VALUE)
+                        .addGap(0, 5, Short.MAX_VALUE)
                         .addGroup(ColorControlTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(BrightnessSlide, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(NegotiveButn, javax.swing.GroupLayout.Alignment.TRAILING)))
@@ -504,9 +504,7 @@ public class ControlFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 3, Short.MAX_VALUE)
                         .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addGap(5, 5, 5))))
+                    .addComponent(jScrollPane2)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -600,7 +598,7 @@ public class ControlFrame extends javax.swing.JFrame {
 
         } else {
             BoundedRangeModel bRangeModel
-                    = new DefaultBoundedRangeModel(0, 0, -50, 50);
+                    = new DefaultBoundedRangeModel(0, 0, -100, 100);
             ZoomSlide.setModel(bRangeModel);
             ZoomSlide.setPaintTicks(false);
             ZoomSlide.setPaintLabels(false);
@@ -622,22 +620,16 @@ public class ControlFrame extends javax.swing.JFrame {
             System.out.println("Entering Carrot");
             if (zoomAlgoType.equals("NN")) {
                 bufImg = imgPro.zoomInNN(slideValue, image);
+            } else {
+                bufImg = imgPro.zoomBiLinear(ZoomSlide.getValue(), image);
             }
-//else if (zoomAlgoType.equals("LI")) {
-//                bufImg = imgPro.zoomInLI(ZoomSlide.getValue(), image);
-//            } else {
-//                bufImg = imgPro.zoomInBLI(ZoomSlide.getValue(), image);
-//            }
 
         } else if (slideValue < 0) {
             if (zoomAlgoType.equals("NN")) {
                 bufImg = imgPro.zoomOutNN(slideValue, image);
+            } else {
+                bufImg = imgPro.zoomOutBiLinear(ZoomSlide.getValue(), image);
             }
-//else if (zoomAlgoType.equals("LI")) {
-//                bufImg = imgPro.zoomOutLI(ZoomSlide.getValue(), image);
-//            } else {
-//                bufImg = imgPro.zoomOutBLI(ZoomSlide.getValue(), image);
-//            }
         } else {
             bufImg = image;
         }
@@ -805,7 +797,10 @@ public class ControlFrame extends javax.swing.JFrame {
 
     private void HistogramButnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistogramButnActionPerformed
 
-        Histogram histogram = new Histogram(image);
+        if(tempImage == null){
+            tempImage = image;
+        }
+        Histogram histogram = new Histogram(tempImage);
         histogram.drawHistogram();
         System.out.println("Histogram Drawn..");
     }//GEN-LAST:event_HistogramButnActionPerformed
