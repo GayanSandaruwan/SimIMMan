@@ -1,0 +1,1 @@
+Open the image-processing.jar with lib folder. ( do not separete them,  otherwise Histogram won't display) 
